@@ -1,0 +1,29 @@
+# template.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  CounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: counter.lambda_handler
+      Runtime: python3.11
+      CodeUri: lambda/
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /counter
+            Method: post
+
+  VisitorTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: visitor-counts
+      AttributeDefinitions:
+        - AttributeName: path
+          AttributeType: S
+      KeySchema:
+        - AttributeName: path
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
