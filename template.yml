@@ -1,21 +1,24 @@
-# template.yaml
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-
 Resources:
   CounterFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: counter.lambda_handler
       Runtime: python3.11
-      CodeUri: lambda/
+      CodeUri: .
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref VisitorTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref VisitorTable
       Events:
         Api:
           Type: Api
           Properties:
-            Path: /counter
+            Path: /
             Method: post
-
   VisitorTable:
     Type: AWS::DynamoDB::Table
     Properties:
